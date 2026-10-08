@@ -4,3 +4,4 @@ package-lock.json
 .DS_Store
 *.log
 MATLAB/
+opencode_dual_engine_skills_spec.md

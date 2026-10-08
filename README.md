@@ -9,7 +9,6 @@ opencode.json                       provider + agent definitions
 agents/                             custom markdown agents
 commands/                           slash commands (the workflow entry points)
 skills/                             reusable agent skills (model-invoked)
-opencode_dual_engine_skills_spec.md design notes for the dual-engine setup
 ```
 
 ## Dual-engine workflow
