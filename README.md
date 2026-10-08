@@ -31,6 +31,34 @@ Slash commands (run in any repo):
 
 Supporting skills: `grilling`, `domain-modeling`, `tdd`, `code-review` — the reusable discipline the commands compose.
 
+## Agents
+
+Primary agents, switchable in the TUI with **Tab**:
+
+| Agent | Model | Purpose |
+|---|---|---|
+| `build` | local llama.cpp (Qwen 27B) | Default daily driver — full tool access, runs entirely local |
+| `planner` | OpenRouter frontier (deepseek-v4.1-flash) | Lead Architect for the dual-engine workflow — grills, specs, tickets, orchestration, review |
+| `deep-researcher` | current session model | Deep research orchestrator: two-phase workflow (approved outline → sub-agent scraping → verified matrix → `report.md` with cited sources, no hallucinated data) |
+
+Subagents: `local_builder` (hidden — dispatched by `planner`, never user-facing), plus OpenCode's built-in `general`, `explore`, `scout`.
+
+## Skills
+
+| Skill | Description |
+|---|---|
+| `grilling` | Relentless Socratic interview that resolves every branch of a design before any code is written |
+| `domain-modeling` | Maintains the project's ubiquitous language (`GLOSSARY.md`) and records hard decisions as ADRs |
+| `tdd` | Red-green-refactor loop with strict scope guards — smallest failing test first |
+| `code-review` | Two-axis review (Standards + Spec) run as parallel subagents, with a Fowler smell baseline |
+| `active-mentor` | Programming mentor for active learning: Socratic guidance, graduated hints, katas and TDD exercises — never hands out complete solutions |
+| `research` | Conducts preliminary research against primary sources and generates a validated research outline |
+| `research-add-fields` / `research-add-items` | Extend an existing research outline with new field definitions or research objects |
+| `research-deep` | Fans out one independent agent per research item for deep investigation |
+| `research-report` | Condenses the deep-research results into a cited markdown report |
+| `technical-writer-helper` | Dual-layered critique co-pilot (tone/style + logic/structure) for technical reports, aligned to publisher templates (IEEE, ACM, ...) — never edits without permission |
+| `frontend-slides` | Generates zero-dependency, animation-rich HTML presentations (or converts PPTX) via visual style discovery |
+
 ## Setup
 
 1. Install [opencode](https://opencode.ai), then copy this directory to `~/.config/opencode/`.
