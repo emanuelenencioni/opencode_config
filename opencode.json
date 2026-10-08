@@ -1,0 +1,115 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider":{
+    "llamacpp": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "llama.cpp (Local)",
+      "options": {
+        "baseURL": "{env:LOCAL_MODEL_SERVER}",
+      	"apiKey":"dummy"
+      },
+      "models": {
+        "my-local-model": {
+          "name": "Qwen 35B Local",
+          "variants": {
+            "low": {
+              "options": {
+                "thinking_budget_tokens": 512
+              }
+            },
+            "mid": {
+              "options": {
+                "thinking_budget_tokens": 4096
+              }
+            },
+            "high": {
+              "options": {
+                "thinking_budget_tokens": 8192
+              }
+            },
+            "max": {
+              "options": {
+                "thinking_budget_tokens": 16384
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+"model": "llamacpp/my-local-model",
+
+"agent": {
+  "build": {
+    "model": "llamacpp/my-local-model",
+    "variant": "high"
+  },
+  "planner": {
+    "description": "Lead Architect: grills the user, writes specs and tickets, orchestrates the dual-engine workflow, reviews code",
+    "mode": "primary",
+    "model": "openrouter/deepseek/deepseek-v4.1-flash",
+    "prompt": "You are the Lead Architect. You grill the user until the design is unambiguous, write specs and tracer-bullet tickets, and orchestrate execution across lanes. You implement cloud-lane tickets yourself (using the tdd skill) and delegate local-lane tickets to the local_builder subagent, one ticket at a time. You close every implementation with the code-review skill. You never commit without presenting findings and getting explicit user approval.",
+    "permission": {
+      "edit": "ask",
+      "bash": {
+        "*": "ask",
+        "git status*": "allow",
+        "git diff*": "allow",
+        "git log*": "allow",
+        "git rev-parse*": "allow",
+        "git branch*": "allow",
+        "git show*": "allow",
+        "ls *": "allow",
+        "cat *": "allow",
+        "echo *": "allow",
+        "find *": "allow",
+        "pytest*": "allow",
+        "python -m pytest*": "allow",
+        "npm test*": "allow",
+        "npm run test*": "allow",
+        "cargo test*": "allow",
+        "go test*": "allow",
+        "colcon build*": "allow",
+        "colcon test*": "allow",
+        "cmake --build*": "allow"
+      },
+      "question": "allow",
+      "task": {
+        "*": "deny",
+        "explore": "allow",
+        "local_builder": "allow"
+      }
+    }
+  },
+  "local_builder": {
+    "description": "Focused isolated implementer for single local-lane tickets: edit the target files, run the verification command, report result",
+    "mode": "subagent",
+    "model": "llamacpp/my-local-model",
+    "hidden": true,
+    "steps": 12,
+    "prompt": "You are a focused, isolated code implementer. You receive ONE ticket: a target file list, context file pointers, an implementation brief, and a verification command. Read the target and context files, implement exactly what the brief says and nothing else, run the verification command, then report PASS or FAIL with a one-line reason. Keep the report under 3 sentences. Never touch files outside the target list. Never retry a failing change more than once.",
+    "permission": {
+      "edit": "allow",
+      "bash": {
+        "*": "ask",
+        "pytest*": "allow",
+        "npm test*": "allow",
+        "npm run test*": "allow",
+        "cargo test*": "allow",
+        "go test*": "allow",
+        "colcon build*": "allow",
+        "colcon test*": "allow",
+        "cmake --build*": "allow",
+        "python -m pytest*": "allow",
+        "python -m unittest*": "allow"
+      }
+    }
+  }
+},
+
+"plugin": [
+"caveman-opencode-plugin@latest"
+]
+}
+
